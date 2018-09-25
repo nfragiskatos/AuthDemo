@@ -9,7 +9,20 @@ var express                 = require("express"),
 mongoose.connect("mongodb://localhost:27017/auth_demo_app", {useNewUrlParser: true});
 
 var app = express();
+
+app.use(require("express-session")({
+    secret: "Yogi is the weirdest and craziest dog everrrr",
+    resave: false,
+    saveUninitialized: false
+}));
+
+
 app.set("view engine", "ejs");
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.get("/", function(req, res) {
     res.render("home"); 
