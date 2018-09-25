@@ -23,8 +23,10 @@ app.set("view engine", "ejs");
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
 
 //=============================================================
 // ROUTES
@@ -56,6 +58,20 @@ app.post("/register", function(req, res) {
             res.redirect("/secret");    
         });
     });
+});
+
+// auth route - show login form
+app.get("/login", function(req, res) {
+    res.render("login");
+})
+
+// auth route - handling user login
+// the passport.authenticate argument is middleware
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/secret",
+    failureRedirect: "/login"    
+}), function(req, res) {
+    
 });
 
 
